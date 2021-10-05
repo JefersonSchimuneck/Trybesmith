@@ -6,7 +6,7 @@ const createUserController = async (request: Request, response: Response) => {
   const user =  await createUserService(request.body)
   const { id, name } = user;
   const token = generateToken({ id, name });
-  return response.status(200).json({ token });
+  return response.status(201).json({ token });
 };
 
 const getUserController = async (request: Request, response: Response) => {
