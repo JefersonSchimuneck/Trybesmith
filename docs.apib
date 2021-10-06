@@ -1,0 +1,444 @@
+FORMAT: 1A
+
+# Trybesmith API
+
+# Group Autenticação
+
+## Login [/login]
+
+### Fazer login [POST]
+
++ Request Quando as credenciais estão corretas (application/json)
+
+        {
+            "username": "johndoe",
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        }
+
++ Request Quando as credenciais são inválidas (application/json)
+
+        {
+            "username": "invalidusername",
+            "password": "invalidPassword"
+        }
+
++ Response 401 (application/json)
+
+    + Attributes
+        + message: Invalid credentials (string, fixed)
+
+
+
+# Group Users
+
+## Tabela Users [/users]
+
+### Criar user [POST]
+
++ Request Quando todos os dados estão corretos (application/json)
+
+        {
+            "username": "johndoe",
+            "classe": "Arqueiro",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 201 (application/json)
+
+        {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        }
+
++ Request Quando `username` não é informado (application/json)
+
+        {
+            "classe": "Arqueiro",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Username is required (string, fixed)
+
++ Request Quando `username` tem um tipo incorreto (application/json)
+
+        {
+            "username": 10,
+            "classe": "Arqueiro",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Username must be a string (string, fixed)
+
++ Request Quando `username` é vazio (application/json)
+
+        {
+            "username": "",
+            "classe": "Arqueiro",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Username can't be empty (string, fixed)
+
+
++ Request Quando `classe` não é informado (application/json)
+
+        {
+            "username": "johndoe",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Classe is required (string, fixed)
+
++ Request Quando `classe` tem um tipo incorreto (application/json)
+
+        {
+            "username": "johndoe"
+            "classe": 10,
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Classe must be a string (string, fixed)
+
++ Request Quando `classe` é vazio (application/json)
+
+        {
+            "username": "johndoe"
+            "classe": "",
+            "level": 10,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Classe can't be empty (string, fixed)
+
++ Request Quando `level` não é informado (application/json)
+
+        {
+            "username": "johndoe",
+            "classe": "Arqueiro",
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Level is required (string, fixed)
+
++ Request Quando `level` tem um tipo incorreto (application/json)
+
+        {
+            "username": "johndoe"
+            "classe": "Arqueiro",
+            "level": "10",
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Level must be a number (string, fixed)
+
++ Request Quando `level` é menor ou igual a `0` (application/json)
+
+        {
+            "username": "johndoe"
+            "classe": "Arqueiro",
+            "level": 0,
+            "password": "MinhaSenhaSegura!"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Level should be greater than 0 (string, fixed)
+
+# Group Products
+
+## Tabela Products [/products]
+
+### Criar product [POST]
+
++ Request Quando todos os dados estão corretos e o token é de admin (application/json)
+
+    + Headers
+
+            Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+    + Body
+
+            {
+                "name": "Poção de cura",
+                "amount": "20 gold"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "id": 1,
+            "name": "Poção de cura",
+            "amount": "20 gold"
+        }
+
++ Request Quando o token não é de admin (application/json)
+
+    + Headers
+
+            Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+    + Body
+
+            {
+                "name": "Poção de cura",
+                "amount": "20 gold"
+            }
+
++ Response 403 (application/json)
+
+    + Attributes
+        + message: User must be admin (string, fixed)
+
++ Request Quando um token não é informado (application/json)
+
++ Response 401 (application/json)
+
+    + Attributes
+        + message: Missing auth token (string, fixed)
+
++ Request Quando `name` não é informado (application/json)
+
+        {
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Name is required (string, fixed)
+
++ Request Quando `name` tem um tipo incorreto (application/json)
+
+        {
+            "name": 10,
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Name must be a string (string, fixed)
+
++ Request Quando `name` é vazio (application/json)
+
+        {
+            "name": "",
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Name can't be empty (string, fixed)
+
++ Request Quando `amount` não é informado (application/json)
+
+        {
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Amount is required (string, fixed)
+
++ Request Quando `amount` tem um tipo incorreto (application/json)
+
+        {
+            "amount": 10,
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Amount must be a string (string, fixed)
+
++ Request Quando `amount` é vazio (application/json)
+
+        {
+            "amount": "",
+            "amount": "20 gold"
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Amount can't be empty (string, fixed)
+
+### Listar products [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "name": "Poção de cura",
+                "amount": "20 gold"
+            },
+            {
+                "id": 2,
+                "name": "Escudo do Herói",
+                "amount": "100 diamond"
+            }
+        ]
+
+# Group Orders
+
+## Tabela Orders [/orders]
+
+### Criar order [POST]
+
++ Request Quando todos os dados estão corretos (application/json)
+
+    + Headers
+
+            Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+    + Body
+
+            {
+                "products": [1, 2]
+            }
+
++ Response 201 (application/json)
+
+        {
+            "id": 1,
+            "products": [1, 2]
+        }
+
++ Request Quando o token não é informado (application/json)
+
+        {
+            "products": [1, 2]
+        }
+
++ Response 401 (application/json)
+
+    + Attributes
+        + message: Missing auth token (string, fixed)
+
++ Request Quando `products` não é informado (application/json)
+
+        {
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Products is required
+
++ Request Quando `products` tem um tipo inválido (application/json)
+
+        {
+            "products": 1
+        }
+
++ Response 422 (application/json)
+    
+    + Attributes
+        + message: Products must be an array
+
++ Request Quando `products` é vazio (application/json)
+
+        {
+            "products": []
+        }
+
++ Response 422 (application/json)
+
+    + Attributes
+        + message: Products can't be empty
+
+### Listar Orders [GET]
+
++ Request Quando um token é informado (application/json)
+
+    + Headers
+
+                Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "userId": 2,
+                "products": [1, 2]
+            }
+        ]
+
++ Request Quando nenhum token é informado (application/json)
+
++ Response 401 (application/json)
+
+    + Attributes
+        + message: Missing auth token (string, fixed)
+
+## Registro Order [/order/{id}]
+
+### Consultar order [GET]
+
++ Parameters
+    + id: 1 (number)
+
++ Request Quando a order existe e um token é informado (application/json)
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "userId": 2,
+            "products": [1, 2]
+        }
+
++ Request Quando a order não existe (application/json)
+
++ Response 404 (application/json)
+
+    + Attributes
+        + message: Order not found (string, fixed)
+
++ Request Quando um token não é informado (application/json)
+
++ Response 401 (application/json)
+
+    + Attributes
+        + message: Missing auth token (string, fixed)
