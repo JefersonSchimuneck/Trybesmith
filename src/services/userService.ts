@@ -1,20 +1,20 @@
 import { userType } from '../@types/types';
 import { userSchema } from '../@types/userSchema';
-import { createUserModel, getUserModel} from "../models/userModel";
+import { createUserModel, getUserModel } from '../models/userModel';
 
 const createUserService = async (user: userType) => {
-  userSchema.parse(user)
+  userSchema.parse(user);
   const newUser = await createUserModel(user);
-  return newUser
-}
+  return newUser;
+};
 
 const getUserService = async (id: string) => {
   try {
     const user = await getUserModel(id);
-    return user
+    return user;
   } catch (err: any) {
-    return null
+    return null;
   }
-}
+};
 
-export { createUserService, getUserService }
+export { createUserService, getUserService };
