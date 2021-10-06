@@ -1,13 +1,12 @@
 import { connection } from "./connection";
 import { userType } from "../@types/types";
 
-const createUserModel = async({name, classe, level, password}: userType) => {
-  const [results] = await connection.execute(
-    `INSERT INTO Trybesmith.users (name, class, level, password)
-    VALUES ('${name}', '${classe}', '${level}', '${password}')`
+const createUserModel = async({username, classe, level, password}: userType) => {
+  const [result] = await connection.execute(
+    `INSERT INTO Trybesmith.users (username, classe, level, password)
+    VALUES ('${username}', '${classe}', '${level}', '${password}')`
   );
-  const id = JSON.parse(JSON.stringify(results)).insertId
-  return {id, name}
+  return result
 }
 
 const getUserModel = async(id: string) => {

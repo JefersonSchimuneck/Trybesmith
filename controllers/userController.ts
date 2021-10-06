@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
-import { createUserService, getUserService } from "../services/userService";
+import { createUserService, userLoginService } from "../services/userService";
 import { generateToken } from "../utils/handleToken";
 
 const createUserController = async (request: Request, response: Response) => {
-  const user =  await createUserService(request.body)
-  const { id, name } = user;
-  const token = generateToken({ id, name });
+  const newUser =  await createUserService(request.body)
+  const { id, username } = newUser;
+  const token = generateToken({ id, username });
   return response.status(201).json({ token });
 };
 
-const getUserController = async (request: Request, response: Response) => {
-  const { id } = request.params;
-  const user =  await getUserService(id);
-  if (!user) return response.status(404).json({message: "User not found"})
-  return response.status(200).json({ user });
+const userLoginController = async (request: Request, response: Response) => {
+  const [user] =  await userLoginService(request.body)
+  const { id, username } = user;
+  const token = generateToken({ id, username });
+  return response.status(201).json({ token });
 };
 
-export { createUserController, getUserController };
+export { createUserController, userLoginController };

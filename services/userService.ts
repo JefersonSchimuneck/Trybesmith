@@ -1,20 +1,25 @@
-import { userType } from '../@types/types';
-import { userSchema } from '../@types/userSchema';
+import { userType, loginType } from '../@types/types';
+import { userSchema, loginSchema } from '../@types/userSchema';
 import { createUserModel, getUserModel} from "../models/userModel";
 
 const createUserService = async (user: userType) => {
   userSchema.parse(user)
   const newUser = await createUserModel(user);
-  return newUser
+  const id = JSON.parse(JSON.stringify(newUser)).insertId
+  return {id, username: user.username}
 }
 
-const getUserService = async (id: string) => {
-  try {
-    const user = await getUserModel(id);
-    return user
-  } catch (err: any) {
-    return null
+const userLoginService = async(login: loginType) => {
+  loginSchema.parse(login)
+  const user = await getUserModel(String(login.userId))
+  const userResult = JSON.parse(JSON.stringify(user))
+  if (!userResult[0]) {
+    throw new Error('User Not found')
   }
+  if (userResult[0].password !== login.password) {
+    throw new Error('UserId or Password invalid')
+  }
+  return userResult
 }
 
-export { createUserService, getUserService }
+export { createUserService, userLoginService }
