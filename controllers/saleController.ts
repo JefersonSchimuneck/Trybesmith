@@ -1,9 +1,21 @@
 import { Request, Response } from "express";
-import { createSaleService } from "../services/saleService";
+import { createSaleService, getSalesService, getSaleByUserIdService } from "../services/saleService";
 
 const createSaleController = async (request: Request, response: Response) => {
-  const sale =  await createSaleService(request.body)
+  const { userId } = request
+  const sale =  await createSaleService({userId, ...request.body})
   return response.status(201).json({ sale });
 };
 
-export { createSaleController };
+const getSalesController = async (request: Request, response: Response) => {
+  const sales =  await getSalesService()
+  return response.status(200).json({ sales });
+};
+
+const getSaleByUserIdController = async (request: Request, response: Response) => {
+  const { id } = request.params
+  const sale =  await getSaleByUserIdService(id)
+  return response.status(200).json({ sale });
+};
+
+export { createSaleController, getSalesController, getSaleByUserIdController };

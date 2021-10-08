@@ -10,17 +10,12 @@ const errorMiddleware = (
   if (err instanceof ZodError) {
     return response.status(400).json({message: err.issues[0].message})
   }
-
-  if (err.message === "User Not found") {
+  if (err.message === "Not found") {
     return response.status(404).json({message: err.message})
   }
-
-  if (err.message === "UserId or Password invalid" || err.message === "Token not found") {
+  if (["UserId or Password invalid", "Token not found", "Invalid token"].includes(err.message)) {
     return response.status(401).json({message: err.message})
   }
-
-  console.log(err)
-
   return response.status(500).json({ message: "Internal Server Error" })
 }
 
